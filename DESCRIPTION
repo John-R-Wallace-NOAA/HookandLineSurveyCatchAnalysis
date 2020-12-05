@@ -1,0 +1,9 @@
+Package: Hook_and_Line_Survey_Catch_Analysis
+Type: Package
+Title: What the package does (short line)
+Version: 0.5
+Date: 2020-12-04
+Author: John Wallace (John.Wallace@noaa.gov)
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: More about what it does (maybe more than one line)
+License: What license is it under?

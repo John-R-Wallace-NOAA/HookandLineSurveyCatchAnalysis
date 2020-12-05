@@ -28,11 +28,12 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
         DATA <- processData(Y.Name = Y.Name, common_name = common_name, Grand = Grand, Include.FishTime = Include.FishTime, Restrict.6min = Restrict.6min, Sites = Sites, Area = Area, 
                              reducedFormula = reducedFormula, propHookCutOffAggr = propHookCutOffAggr, propHookCutOffMirage = propHookCutOffAggr, propHookCutOffToro = propHookCutOffToro)
         
-        switch(menu("Enter 1 (one) if anglers with a small number of hooks fished need to be added to the minor anglers? (Enter 0 (zero) to skip.)") + 1, cat("\n"), {
+        switch(menu("Enter 1 (one) if anglers with a small number of hooks fished need to be added to the minor anglers, or if the minor anglers group is too small compared with the other anglers? (Enter 0 (zero) to skip.)") + 1, cat("\n"), {
             cat("\nChange the proportion of hooks fished cutoff value argument for the correct vessel and rerun HandL.MCMClogit()\n")
             cat("     Any angler on a given vessel that has fished less hooks than the proportion cutoff times the total hooks fished on that vessel will be put into the minor anglers group.\n") 
             cat("     The total number of hooks is based on the Area argument, is over all years of the data, and is over sites based on species occurence.\n")
             cat("     A site is only in the model if the given species has been caught at that site as least twice over all years.\n\n")
+            cat("     If the minor anglers group is too small add in the next angler with the next smallest hooks fished.\n\n")
             # stop("No error - just stopping for the argument value change...")
             return()
         })
@@ -45,6 +46,8 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
         print(xyplot(weight_kg ~ length_cm | year, groups = ordered(sex, c('M', 'F', 'U')), cex = c(1, 0.4, 1), data = DATA, auto = TRUE)) 
      }
     
+     DATA <- DATA[, - grep('weight_kg', names(DATA))]
+     DATA <- DATA[, - grep('length_cm', names(DATA))] 
      DATA <- na.omit(DATA)
     
      # Use MCMClogit from MCMCpack package

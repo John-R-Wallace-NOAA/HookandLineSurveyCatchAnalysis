@@ -15,6 +15,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
      }
      
      sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/plot.design.jrw.R")
+     sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/catf.R")
      
      require(lattice)
      require(Hmisc)
@@ -29,21 +30,22 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
                              reducedFormula = reducedFormula, propHookCutOffAggr = propHookCutOffAggr, propHookCutOffMirage = propHookCutOffAggr, propHookCutOffToro = propHookCutOffToro)
         
         switch(menu("Enter 1 (one) if anglers with a small number of hooks fished need to be added to the minor anglers, or if the minor anglers group is too small compared with the other anglers? (Enter 0 (zero) to skip.)") + 1, cat("\n"), {
-            cat("\nChange the proportion of hooks fished cutoff value argument for the correct vessel and rerun HandL.MCMClogit()\n")
-            cat("     Any angler on a given vessel that has fished less hooks than the proportion cutoff times the total hooks fished on that vessel will be put into the minor anglers group.\n") 
-            cat("     The total number of hooks is based on the Area argument, is over all years of the data, and is over sites based on species occurence.\n")
-            cat("     A site is only in the model if the given species has been caught at that site as least twice over all years.\n\n")
-            cat("     If the minor anglers group is too small add in the next angler with the next smallest hooks fished.\n\n")
+            catf("\nChange the proportion of hooks fished cutoff value argument for the correct vessel and rerun HandL.MCMClogit()\n")
+            catf("     Any angler on a given vessel that has fished less hooks than the proportion cutoff times the total hooks fished on that vessel will be put into the minor anglers group.\n") 
+            catf("     The total number of hooks is based on the Area argument, is over all years of the data, and is over sites based on species occurence.\n")
+            catf("     A site is only in the model if the given species has been caught at that site as least twice over all years.\n\n")
+            catf("     If the minor anglers group is too small add in the next angler with the next smallest hooks fished.\n\n")
             # stop("No error - just stopping for the argument value change...")
             return()
         })
          
         # Look at the imported data
-        dev.new()
+        dev.new(width =16, height = 10)
         plot.design.jrw(DATA[, c("year", "site_number", "vessel", "drop_number", "hook_number", "angler_number", "moon_phase_r", "sex", "CrewStaff")], DATA[, Y.Name], ylab = paste("Mean of", Y.Name))
         
+        catf("\n\nThe weight by length figure is only for QA/QC. Length and weight are not used in this model.\n\n")
         dev.new()
-        print(xyplot(weight_kg ~ length_cm | year, groups = ordered(sex, c('M', 'F', 'U')), cex = c(1, 0.4, 1), data = DATA, auto = TRUE)) 
+        print(xyplot(weight_kg ~ length_cm | year, groups = ordered(sex, c('M', 'F', 'U')), cex = c(1, 0.4, 1), data = DATA, xlab = "Length (cm)", ylab = "Weight (kg)", auto = TRUE)) 
      }
     
      DATA <- DATA[, - grep('weight_kg', names(DATA))]
@@ -55,43 +57,37 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
                       reducedFormula = reducedFormula, buffer = buffer, contrast = contrast, DIC.Check = DIC.Check, tune = tune, mcmc = mcmc, burnin = burnin, 
                       thin = thin, verbose = verbose, Stop.before.MCMC = Stop.before.MCMC, MAIN.STEP.AIC = MAIN.STEP.AIC, STEP.AIC = STEP.AIC, 
                       GLM.FINAL.AIC = GLM.FINAL.AIC) 
-                      
     
-     
-     
-     
+    
     # Print results table
-    print(stepAICList$SS.Table)
+    catf("\n\n"); print(stepAICList$SS.Table); catf("\n")
   
-    # Print the final two figures
+    # Print the final figure
+    # To redo the figure below for a new placement of '(a)' of '(b)' use stepAICList <- < the list this function was saved to >, e.g. stepAICList <- SqSpot.2019.NFT.1k.ALL, 
+    # change 0.10 in "2004.5, yRange[1] + 0.10 * diff(yRange)" below to a different value, and rerun. 
+    
     YEARS <- 2004:max(as.numeric(as.character(DATA$year)))
     
-    print(xYplot(Cbind(stepAICList$Q.MCMC[1,], stepAICList$Q.MCMC[2,], stepAICList$Q.MCMC[3,]) ~ YEARS, type='o', ylab=list("Index", cex=1.2), xlab = list("Year", cex = 1.2), 
-        panel = function(subscripts=subscripts, ...) {panel.xYplot(subscripts=subscripts, ...); ltext(2004.5, 0.25, "(b)", cex=1.2)}), more = FALSE)
-  
     FINAL.GLM <- stepAICList$Final.glm.coef
     E.M <- FINAL.GLM$Estimate
     CI.L <- FINAL.GLM$Estimate - 1.96 * FINAL.GLM$Std.Error
     CI.H <- FINAL.GLM$Estimate + 1.96 * FINAL.GLM$Std.Error
   
+  
+    trellis.device(theme = "col.whitebg") # This creates a new plotting device
    
-    #  E.M <- Boc.Final.Model.MCMC.2014$Final.glm.coef$Estimate
-    # CI.L <- Boc.Final.Model.MCMC.2014$Final.glm.coef$Estimate - 1.96 * Boc.Final.Model.MCMC.2014$Final.glm.coef$Std.Error
-    # CI.H <- Boc.Final.Model.MCMC.2014$Final.glm.coef$Estimate + 1.96 * Boc.Final.Model.MCMC.2014$Final.glm.coef$Std.Error
-  
-    trellis.device(theme = "col.whitebg")
-  
-    print(xYplot(Cbind(stepAICList$Q.MCMC[1,], stepAICList$Q.MCMC[2,], stepAICList$Q.MCMC[3,]) ~ YEARS, type='o', ylab=list("Index", cex=1.2), xlab="", 
-        ylim=c(-0.01, .25), col='black', scales = list(y=list(at=c(0.0, 0.05, 0.10, 0.15, 0.20, 0.25), 
-        labels=c("0.00", "0.05", "0.10", "0.15", "0.20", "0.25"), cex=1), x=list(at=2000, label=""), tck=c(1,0)), 
-        panel=function(subscripts=subscripts, ...) {panel.xYplot(subscripts=subscripts, ...); ltext(2004.5, 0.10, "(a)", cex=1.2)}),
-        split=c(1,1,1,2), more = TRUE)
+    yRange <- c(min(c(stepAICList$Q.MCMC[2,], 0)), max(stepAICList$Q.MCMC[3,]))
+    yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
+    print(xYplot(Cbind(stepAICList$Q.MCMC[1,], stepAICList$Q.MCMC[2,], stepAICList$Q.MCMC[3,]) ~ YEARS, type = 'o', ylab = list("Index", cex = 1.2), xlab = "", 
+         ylim = yRange, col = 'black', panel = function(subscripts = subscripts, ...) {panel.xYplot(subscripts = subscripts, ...); 
+         ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(a)", cex = 1.2)}), split = c(1,1,1,2), more = TRUE)
     
-    print(xYplot(Cbind(E.M, CI.L, CI.H) ~ YEARS, type='o', ylab=list("Year effect coefficients", cex=1.2), xlab=list("Year", cex=1.2), 
-        ylim=c(-2, 0.35), col='black', scales = list(y=list(at=c(-2.00, -1.75, -1.50, -1.25, -1.00, -0.75, -0.50, -0.25, 0.00, 0.25),
-        labels=c("-2.00", "-1.75", "-1.50", "-1.25", "-1.00", "-0.75", "-0.50", "-0.25", "0.00", "0.25"), cex=1), x=list(at=YEARS, cex=1), tck=c(1,0)),
-        panel=function(subscripts=subscripts, ...) {panel.xYplot(subscripts=subscripts, ...); ltext(2004.5, -1.25, "(b)", cex=1.2)}),
-        split=c(1,2,1,2), more = FALSE)
+    
+    yRange <- c(min(c(CI.L, 0)), max(CI.H))
+    yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
+    print(xYplot(Cbind(E.M, CI.L, CI.H) ~ YEARS, type='o', ylab=list("Year effect coefficients", cex=1.2), xlab = list("Year", cex = 1.2), 
+         ylim = yRange, col='black', panel=function(subscripts=subscripts, ...) {panel.xYplot(subscripts=subscripts, ...); 
+         ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(b)", cex=1.2)}), split = c(1,2,1,2), more = FALSE)
     
 
     stepAICList 

@@ -15,6 +15,9 @@ require(JRWToolBox)
 Grand.2019 <- importData(grandPathCSV = "qryGrandUnifiedThru2019_For2021Assessments_DWarehouse version.csv")
 Grand.2019[1:3, ]
 
+# Find a common name to run the analysis on
+table(Grand.2019$common_name, , useNA = "ifany")
+
      
 # Micro to test.  Unfortunately, 'reducedFormula' needs to TRUE for lack of variables in the current database.
 Boc.2016.NFT.1k.121 <- HandL.MCMClogit(Y.Name = "NumBoc", common_name = "Bocaccio", Area = c('Orig121', 'CCA', 'ALL')[1], Include.FishTime = FALSE, 

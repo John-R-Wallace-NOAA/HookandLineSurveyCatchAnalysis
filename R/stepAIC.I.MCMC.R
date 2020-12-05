@@ -2,7 +2,7 @@
 # NFT = No Fishing Time
 # vessel is taken out of the model since it is colinear with CrewStaff, but then recreated later
 
-stepAIC.I.MCMC.NFT <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, Interaction = TRUE, Include.FishTime = FALSE, reducedFormula = FALSE, buffer = NULL, contrast = 'treatment', 
+stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, Interaction = TRUE, Include.FishTime = FALSE, reducedFormula = FALSE, buffer = NULL, contrast = 'treatment', 
          DIC.Check = 3, tune = 0.17, mcmc = 500000, burnin = 3000, thin = 500, verbose = 1000, Stop.before.MCMC = FALSE, MAIN.STEP.AIC = NULL, STEP.AIC = NULL, 
          GLM.FINAL.AIC = NULL) {
   

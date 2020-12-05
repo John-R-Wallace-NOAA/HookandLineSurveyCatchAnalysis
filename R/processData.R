@@ -1,6 +1,6 @@
 
 processData <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Grand = Grand_2019, Include.FishTime = FALSE, Restrict.6min = FALSE, Sites = NULL, Area = c("Orig121", "CCA", "ALL")[1], 
-                          propHookCutOffAggr = ifelse(Area == "ALL", 0.002, 0.003), propHookCutOffMirage = propHookCutOffAggr, propHookCutOffToro = 3 * propHookCutOffAggr) {
+                          reducedFormula = FALSE, propHookCutOffAggr = ifelse(Area == "ALL", 0.002, 0.003), propHookCutOffMirage = propHookCutOffAggr, propHookCutOffToro = 3 * propHookCutOffAggr) {
 
    #   -------- Import utility Functions --------
        sourceFunctionURL <- function(URL) {

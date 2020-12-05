@@ -197,7 +197,7 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, 
         nm <- 1
         Terms <- terms(fit)
         if (trace) {
-            catf("Start:  AIC=", format(round(bAIC, 2)), "\n", cut.string(deparse(as.vector(formula(fit)))), 
+            cat("Start:  AIC=", format(round(bAIC, 2)), "\n", cut.string(deparse(as.vector(formula(fit)))), 
                 "\n\n", sep = "")
             utils::flush.console()
         }
@@ -278,11 +278,21 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, 
             edf <- bAIC[1L]
             bAIC <- bAIC[2L]
             if (trace) {
-                catf("\nStep:  AIC=", format(round(bAIC, 2)), "\n", cut.string(deparse(as.vector(formula(fit)))), "\n\n", sep = "")
+                cat("\nStep:  AIC=", format(round(bAIC, 2)), "\n", cut.string(deparse(as.vector(formula(fit)))), "\n\n", sep = "")
                 utils::flush.console()
             }
-            if (!is.null(buffer) && bAIC >= AIC - buffer) 
+           # The new candidate model has to be better (smaller) than (AIC - buffer) of the current model for the break of the loop NOT to occur.
+           # So if the buffer = 1.95 (the default), then the new candidate model has to be almost 2 AIC uints better for the AIC stepping to continue. 
+           # If the buffer is significantly greater than 2 AIC units then the new model has to be a lot better than the current model for the AIC stepping to continue.
+           # Hook and Line survey binary models appear to need a value far greater than 2 AIC units to be parsimonies and not have
+           # too many biologically dubious variables and interactions terms - this is not fully understood.
+           if (!is.null(buffer) && bAIC >= AIC - buffer) { 
                 break
+           } else {
+                if (bAIC >= AIC + 1e-07)  # Original code in MASS::stepAIC()
+                   break
+           }
+                           
             nm <- nm + 1
             models[[nm]] <- list(deviance = mydeviance(fit), df.resid = n - edf, change = change, AIC = bAIC)
             if (!is.null(keep)) 
@@ -546,9 +556,12 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, 
     
       assign(paste(substring(Y.Name,4), ".FIT.DF.MCMC.", round(mcmc/1e6,1), "M", ".Burn.", round(burnin/1e6,1), "M", sep=""), FIT.DF, pos = 1)
     
-      if(.Platform$OS.type == "windows") 
+      if(.Platform$OS.type == "windows") {
+           dev.new()
            plot(mcmc(FIT.DF[, Iyear]), ask = FALSE)
+      }
       
+      dev.new()
       autocorr.plot(mcmc(FIT.DF[, Iyear]), ask = FALSE)
         
      

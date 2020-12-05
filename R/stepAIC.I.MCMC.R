@@ -544,7 +544,7 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, 
         stop("Only treatment contrasts are currentlty supported") # *******************************************************
       }
     
-      assign(paste(substring(Y.Name,4), "FIT.DF.MCMC.", round(mcmc/1e6,1), "M", ".Burn.", round(burnin/1e6,1), "M", sep=""), FIT.DF , pos=1)
+      assign(paste(substring(Y.Name,4), ".FIT.DF.MCMC.", round(mcmc/1e6,1), "M", ".Burn.", round(burnin/1e6,1), "M", sep=""), FIT.DF, pos = 1)
     
       if(.Platform$OS.type == "windows") 
            plot(mcmc(FIT.DF[, Iyear]), ask = FALSE)

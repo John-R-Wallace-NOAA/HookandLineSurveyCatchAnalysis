@@ -1,7 +1,7 @@
 
 HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area = c('Orig121', 'CCA', 'ALL')[1], Include.FishTime = FALSE, Restrict.6min = FALSE, Sites = NULL, 
                              propHookCutOffAggr = ifelse(Area == "ALL", 0.002, 0.003), propHookCutOffMirage = propHookCutOffAggr, propHookCutOffToro = 3 * propHookCutOffAggr,
-                             VermComplex = FALSE, Interaction = TRUE, reducedFormula = TRUE, buffer = c(15, 45), contrast = 'treatment', tune = 0.14, mcmc = 150000, burnin = 1000, 
+                             VermComplex = FALSE, Interaction = TRUE, reducedFormula = FALSE, buffer = c(15, 45), contrast = 'treatment', tune = 0.14, mcmc = 150000, burnin = 1000, 
                              thin = 150, verbose = 1000, Stop.before.MCMC = FALSE, MAIN.STEP.AIC = NULL, STEP.AIC = NULL, GLM.FINAL.AIC = NULL, grandPathCSV = NULL) {
 
      #   -------- Import utility Functions --------
@@ -26,7 +26,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
      
         # Process the data and create minor angler groups
         DATA <- processData(Y.Name = Y.Name, common_name = common_name, Grand = Grand, Include.FishTime = Include.FishTime, Restrict.6min = Restrict.6min, Sites = Sites, Area = Area, 
-                             propHookCutOffAggr = propHookCutOffAggr, propHookCutOffMirage = propHookCutOffAggr, propHookCutOffToro = 3 * propHookCutOffAggr)
+                             reducedFormula = FALSE, propHookCutOffAggr = propHookCutOffAggr, propHookCutOffMirage = propHookCutOffAggr, propHookCutOffToro = 3 * propHookCutOffAggr)
         
         switch(menu("Do other anglers with a small number of hooks fished need to be added to the minor anglers? (Use zero (0) to skip.)") + 1, cat("\n"), {
             cat("\nChange the proportion of hooks fished cutoff value argument for the correct vessel and rerun HandL.MCMClogit()\n")

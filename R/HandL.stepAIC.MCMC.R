@@ -61,10 +61,12 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     
     # Print results table
     catf("\n\n"); print(stepAICList$SS.Table); catf("\n")
-  
+    capture.output(print(stepAICList$SS.Table), file = paste0(Y.Name, ".SS.Table.txt"))
+    
+    
     # Print the final figure
-    # To redo the figure below for a new placement of '(a)' of '(b)' use stepAICList <- < the list this function was saved to >, e.g. stepAICList <- SqSpot.2019.NFT.1k.ALL, 
-    # change 0.10 in "2004.5, yRange[1] + 0.10 * diff(yRange)" below to a different value, and rerun. 
+    #      To redo the figure below for a new placement of '(a)' of '(b)' use stepAICList <- < the list this function was saved to >, e.g. stepAICList <- SqSpot.2019.NFT.1k.ALL, 
+    #      change 0.10 in "2004.5, yRange[1] + 0.10 * diff(yRange)" below to a different value, and rerun. 
     
     YEARS <- 2004:max(as.numeric(as.character(DATA$year)))
     
@@ -73,8 +75,8 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     CI.L <- FINAL.GLM$Estimate - 1.96 * FINAL.GLM$Std.Error
     CI.H <- FINAL.GLM$Estimate + 1.96 * FINAL.GLM$Std.Error
   
-  
-    trellis.device(theme = "col.whitebg") # This creates a new plotting device
+    #     Output to current device
+    trellis.device(theme = "col.whitebg") # This creates a new plotting device (this may be needed on older versions of R)
    
     yRange <- c(min(c(stepAICList$Q.MCMC[2,], 0)), max(stepAICList$Q.MCMC[3,]))
     yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
@@ -89,7 +91,25 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
          ylim = yRange, col='black', panel=function(subscripts=subscripts, ...) {panel.xYplot(subscripts=subscripts, ...); 
          ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(b)", cex=1.2)}), split = c(1,2,1,2), more = FALSE)
     
-
+    
+    #     Output to PNG
+    png(width = 1024, height = 1024, file = paste0(Y.Name, ".MCMC.Index.and.Year.Effect.Coeff.png"))
+       
+    yRange <- c(min(c(stepAICList$Q.MCMC[2,], 0)), max(stepAICList$Q.MCMC[3,]))
+    yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
+    print(xYplot(Cbind(stepAICList$Q.MCMC[1,], stepAICList$Q.MCMC[2,], stepAICList$Q.MCMC[3,]) ~ YEARS, type = 'o', ylab = list("Index", cex = 1.2), xlab = "", 
+         ylim = yRange, col = 'black', panel = function(subscripts = subscripts, ...) {panel.xYplot(subscripts = subscripts, ...); 
+         ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(a)", cex = 1.2)}), split = c(1,1,1,2), more = TRUE)
+    
+    
+    yRange <- c(min(c(CI.L, 0)), max(CI.H))
+    yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
+    print(xYplot(Cbind(E.M, CI.L, CI.H) ~ YEARS, type='o', ylab=list("Year effect coefficients", cex=1.2), xlab = list("Year", cex = 1.2), 
+         ylim = yRange, col='black', panel=function(subscripts=subscripts, ...) {panel.xYplot(subscripts=subscripts, ...); 
+         ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(b)", cex=1.2)}), split = c(1,2,1,2), more = FALSE)
+    
+    dev.off()
+    
     stepAICList 
 
 }

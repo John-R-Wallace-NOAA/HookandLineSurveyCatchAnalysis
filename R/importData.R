@@ -14,10 +14,15 @@ importData <- function(grandPathCSV = NULL, PST.For.All.years = FALSE) {
         source(File.ASCII, local = parent.env(environment()))
      }
      
+     
      sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/recode.simple.R")
+     sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/scanIn.R")
      sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/Imap/master/R/sunRiseSet.R")
      # sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/PacFIN-Data-Extraction/master/R/nameConvertVdrfdToCompFT.R")
 
+     require(chron)
+     
+     
      if(is.null(grandPathCSV))
         # read from Data Warehouse
         stop("Data is not on Warehouse yet - please supply a drive file location")

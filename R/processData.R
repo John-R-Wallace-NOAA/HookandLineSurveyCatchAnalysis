@@ -30,7 +30,9 @@ processData <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Grand = Gra
    Grand.TMP[Y.Name] <- as.numeric(Grand.TMP$common_name %in% common_name) 
    
    Grand.TMP$CrewStaff <- as.character(apply(matrix(paste(Grand.TMP$angler_first_name, Grand.TMP$angler_last_name), ncol=1)[,,drop=F], 1, function(x) paste(get.subs(x, sep=" "), collapse="")))
-      
+   
+   # Change Adrian Chavez's name to 'AAAdrian Chavez', so that the Aggressor also has the crew name that gets set to zero
+   Grand.TMP$CrewStaff[Grand.TMP$CrewStaff %in% "AdrianChavez"] <- "AAAdrianChavez"  
 
    # printf(Table(Grand.TMP$CrewStaff); catf("\n\n")
 

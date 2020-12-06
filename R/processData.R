@@ -57,24 +57,24 @@ processData <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Grand = Gra
   
       if(Include.FishTime) {
           DATA <- Grand.TMP[Grand.TMP$site_number %in% Number[Number$NUM != 0, "site_number"] & Grand.TMP$Numyears >= 2, c(Y.Name, "year", "site_number", "vessel",
-              "drop_number", "hook_number", "angler_number", "sex", "CrewStaff", "depth_meters", "FishTime", "swell_height_m", "wave_height_m", "moon_phase_r", "moon_percent_fullness_r", "drop_time_proportion_of_solar_day",
+              "drop_number", "hook_number", "angler_number", "CrewStaff", "depth_meters", "FishTime", "swell_height_m", "wave_height_m", "moon_phase_r", "moon_percent_fullness_r", "drop_time_proportion_of_solar_day",
               "weight_kg", "length_cm")]
       } else {
       
           DATA <- Grand.TMP[Grand.TMP$site_number %in% Number[Number$NUM != 0, "site_number"] & Grand.TMP$Numyears >= 2, c(Y.Name, "year", "site_number", "vessel",
-              "drop_number", "hook_number", "angler_number", "sex", "CrewStaff", "depth_meters", "swell_height_m", "wave_height_m", "moon_phase_r", "moon_percent_fullness_r", "drop_time_proportion_of_solar_day", "weight_kg", "length_cm")]
+              "drop_number", "hook_number", "angler_number", "CrewStaff", "depth_meters", "swell_height_m", "wave_height_m", "moon_phase_r", "moon_percent_fullness_r", "drop_time_proportion_of_solar_day", "weight_kg", "length_cm")]
       }
       
   } else {
 
      if(Include.FishTime) {
           DATA <- Grand.TMP[Grand.TMP$site_number %in% Number[Number$NUM != 0, "site_number"] & Grand.TMP$Numyears >= 2, c(Y.Name, "year", "site_number", "vessel",
-              "drop_number", "hook_number", "angler_number", "sex", "CrewStaff", "depth_meters", "FishTime", "swell_height_m", "wave_height_m", "moon_phase_r", "moon_percent_fullness_r", "drop_time_proportion_of_solar_day",
+              "drop_number", "hook_number", "angler_number", "CrewStaff", "depth_meters", "FishTime", "swell_height_m", "wave_height_m", "moon_phase_r", "moon_percent_fullness_r", "drop_time_proportion_of_solar_day",
               "SSTDrop.C", "TideFlow2", "TideHt", "DriftSpeedDrop.k", "weight_kg", "length_cm")]
       } else {
       
           DATA <- Grand.TMP[Grand.TMP$site_number %in% Number[Number$NUM != 0, "site_number"] & Grand.TMP$Numyears >= 2, c(Y.Name, "year", "site_number", "vessel",
-              "drop_number", "hook_number", "angler_number", "sex", "CrewStaff", "depth_meters", "swell_height_m", "wave_height_m", "moon_phase_r", "moon_percent_fullness_r", "drop_time_proportion_of_solar_day", 
+              "drop_number", "hook_number", "angler_number", "CrewStaff", "depth_meters", "swell_height_m", "wave_height_m", "moon_phase_r", "moon_percent_fullness_r", "drop_time_proportion_of_solar_day", 
               "SSTDrop.C", "TideFlow2", "TideHt", "DriftSpeedDrop.k", "weight_kg", "length_cm")]
      }
   }     
@@ -96,7 +96,6 @@ processData <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Grand = Gra
    DATA$CrewStaff <- factor(as.character(DATA$CrewStaff))
    DATA$hook_number <- factor(as.character(DATA$hook_number))
    DATA$moon_phase_r <- factor(as.character(DATA$moon_phase_r))
-   DATA$sex <- factor(as.character(DATA$sex))
    # DATA$TidePhase <- factor(as.character(DATA$TidePhase))
    
    

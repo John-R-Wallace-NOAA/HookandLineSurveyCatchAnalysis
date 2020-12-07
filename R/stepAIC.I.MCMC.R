@@ -427,8 +427,8 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
     
       if(Interaction) {
     
-         SA.FORM <- as.character(MAIN.STEP.AIC$formula)[3]
-         printf(SA.FORM)
+        SA.FORM <- as.character(MAIN.STEP.AIC$formula)[3]
+        printf(SA.FORM)
     
         STEP.AIC <- stepAIC.buffer(MAIN.STEP.AIC, list(upper = formula(paste("~", SA.FORM, "+ (", substring(SA.FORM, 31), ")^2")), lower = formula(paste("~", SA.FORM))), buffer = buffer[2], trace = 2)
     
@@ -480,7 +480,7 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
     # stop()
     
       catf("\n\nStarting final model MCMC: ", as.character(Sys.time()), "\n\n") 
-      cat(" Starting final model MCMC: ", as.character(Sys.time()), "\n\n", file = 'Run.txt')
+      catf(" Starting final model MCMC: ", as.character(Sys.time()), "\n\n", file = 'Run.txt')
     
       MCMC <- MCMClogit(GLM.FINAL.AIC, GLM.FINAL.AIC$data, tune = tune, mcmc = mcmc, burnin = burnin, thin = thin, verbose = verbose)
       assign("MCMC", MCMC, pos = 1)

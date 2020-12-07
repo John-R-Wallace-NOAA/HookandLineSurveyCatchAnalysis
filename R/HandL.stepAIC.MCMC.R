@@ -68,7 +68,13 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     #      To redo the figure below for a new placement of '(a)' of '(b)' use stepAICList <- < the list this function was saved to >, e.g. stepAICList <- SqSpot.2019.NFT.1k.ALL, 
     #      change 0.10 in "2004.5, yRange[1] + 0.10 * diff(yRange)" below to a different value, and rerun. 
     
-    YEARS <- 2004:max(as.numeric(as.character(DATA$year)))
+    if(Area %in% c("Orig121", "ALL")) 
+        yearStart <- 2004
+        
+    if(Area == "CCA")) 
+        yearStart <- 2014  
+
+    YEARS <- yearStart:max(as.numeric(as.character(DATA$year)))        
     
     FINAL.GLM <- stepAICList$Final.glm.coef
     E.M <- FINAL.GLM$Estimate
@@ -82,14 +88,14 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
     print(xYplot(Cbind(stepAICList$Q.MCMC[1,], stepAICList$Q.MCMC[2,], stepAICList$Q.MCMC[3,]) ~ YEARS, type = 'o', ylab = list("Index", cex = 1.2), xlab = "", 
          ylim = yRange, col = 'black', panel = function(subscripts = subscripts, ...) {panel.xYplot(subscripts = subscripts, ...); 
-         ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(a)", cex = 1.2)}), split = c(1,1,1,2), more = TRUE)
+         ltext(yearStart + 0.5, yRange[1] + 0.10 * diff(yRange), "(a)", cex = 1.2)}), split = c(1,1,1,2), more = TRUE)
     
     
     yRange <- c(min(c(CI.L, 0)), max(CI.H))
     yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
     print(xYplot(Cbind(E.M, CI.L, CI.H) ~ YEARS, type='o', ylab=list("Year effect coefficients", cex=1.2), xlab = list("Year", cex = 1.2), 
          ylim = yRange, col='black', panel=function(subscripts=subscripts, ...) {panel.xYplot(subscripts=subscripts, ...); 
-         ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(b)", cex=1.2)}), split = c(1,2,1,2), more = FALSE)
+         ltext(yearStart + 0.5, yRange[1] + 0.10 * diff(yRange), "(b)", cex=1.2)}), split = c(1,2,1,2), more = FALSE)
     
     
     #     Output to PNG
@@ -99,14 +105,14 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
     print(xYplot(Cbind(stepAICList$Q.MCMC[1,], stepAICList$Q.MCMC[2,], stepAICList$Q.MCMC[3,]) ~ YEARS, type = 'o', ylab = list("Index", cex = 1.2), xlab = "", 
          ylim = yRange, col = 'black', panel = function(subscripts = subscripts, ...) {panel.xYplot(subscripts = subscripts, ...); 
-         ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(a)", cex = 1.2)}), split = c(1,1,1,2), more = TRUE)
+         ltext(yearStart + 0.5, yRange[1] + 0.10 * diff(yRange), "(a)", cex = 1.2)}), split = c(1,1,1,2), more = TRUE)
     
     
     yRange <- c(min(c(CI.L, 0)), max(CI.H))
     yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))
     print(xYplot(Cbind(E.M, CI.L, CI.H) ~ YEARS, type='o', ylab=list("Year effect coefficients", cex=1.2), xlab = list("Year", cex = 1.2), 
          ylim = yRange, col='black', panel=function(subscripts=subscripts, ...) {panel.xYplot(subscripts=subscripts, ...); 
-         ltext(2004.5, yRange[1] + 0.10 * diff(yRange), "(b)", cex=1.2)}), split = c(1,2,1,2), more = FALSE)
+         ltext(yearStart + 0.5, yRange[1] + 0.10 * diff(yRange), "(b)", cex=1.2)}), split = c(1,2,1,2), more = FALSE)
     
     dev.off()
     

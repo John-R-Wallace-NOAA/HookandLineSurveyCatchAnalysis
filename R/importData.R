@@ -30,6 +30,7 @@ importData <- function(grandPathCSV = NULL, PST.For.All.years = FALSE) {
         Grand <- utils::read.csv(grandPathCSV)
      
      Grand$longitude_in_degrees <- - Grand$longitude_in_degrees
+     Grand$cowcod_conservation_area_indicator <- as.logical(Grand$cowcod_conservation_area_indicator)
           
      # POSIXct is recommended for date columns in data frames
      Grand$date_yyyymmdd <- as.POSIXct(as.character(Grand$date_yyyymmdd), format = "%Y%m%d")  # "%Y/%m/%d %H:%M"

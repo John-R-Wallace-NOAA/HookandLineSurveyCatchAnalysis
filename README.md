@@ -26,7 +26,7 @@ Note that the early years of the survey had less non-CCA (Cowcod Conservation Ar
      
 For species that are caught less frequently and predominately only on certain sites, these missing sites may impact the index in the early years.
 
-Years with less sites than 121 after 2008 are due to weather issues and those with greater than 121 are duplicated sites, whether by accident or design.
+Years with less sites than 121 in the later part of the survey due to weather issues and those with greater than 121 are duplicated sites.
 
 ## Reference
 

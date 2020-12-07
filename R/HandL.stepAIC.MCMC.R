@@ -43,7 +43,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
         dev.new(width =16, height = 10)
         plot.design.jrw(DATA[, c("year", "site_number", "vessel", "drop_number", "hook_number", "angler_number", "moon_phase_r", "sex", "CrewStaff")], DATA[, Y.Name], ylab = paste("Mean of", Y.Name))
         
-        catf("\n\nThe weight by length figure is only for QA/QC. Length and weight are not used in this model.\n\n")
+        catf("\n\nThe weight by length figure with groups by sex is only for QA/QC. Length, weight, and sex are not used in this model.\n\n")
         dev.new()
         print(xyplot(weight_kg ~ length_cm | year, groups = ordered(sex, c('M', 'F', 'U')), cex = c(1, 0.4, 1), data = DATA, xlab = "Length (cm)", ylab = "Weight (kg)", auto = TRUE)) 
      }
@@ -53,7 +53,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
      DATA <- na.omit(DATA)
     
      # Use MCMClogit from MCMCpack package
-     stepAICList <- stepAIC.I.MCMC(Y.Name = Y.Name, DATA = DATA, VermComplex = VermComplex, Interaction = Interaction, Include.FishTime = Include.FishTime, 
+     stepAICList <- stepAIC.I.MCMC(Y.Name = Y.Name, DATA = DATA, Area = Area, VermComplex = VermComplex, Interaction = Interaction, Include.FishTime = Include.FishTime, 
                       reducedFormula = reducedFormula, buffer = buffer, contrast = contrast, DIC.Check = DIC.Check, tune = tune, mcmc = mcmc, burnin = burnin, 
                       thin = thin, verbose = verbose, Stop.before.MCMC = Stop.before.MCMC, MAIN.STEP.AIC = MAIN.STEP.AIC, STEP.AIC = STEP.AIC, 
                       GLM.FINAL.AIC = GLM.FINAL.AIC) 

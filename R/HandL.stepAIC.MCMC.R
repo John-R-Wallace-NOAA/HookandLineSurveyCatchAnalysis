@@ -71,7 +71,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     if(Area %in% c("Orig121", "ALL")) 
         yearStart <- 2004
         
-    if(Area == "CCA")) 
+    if(Area == "CCA") 
         yearStart <- 2014  
 
     YEARS <- yearStart:max(as.numeric(as.character(DATA$year)))        

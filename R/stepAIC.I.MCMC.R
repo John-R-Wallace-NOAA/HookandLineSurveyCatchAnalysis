@@ -22,13 +22,10 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
        sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/DIC.R")
        sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/get.subs.R")
        
-  
     require(gtools) 
     require(MASS)
     require(gam)
     require(MCMCpack)
-    require(JRWToolBox)
-    
     
     fix.poly.names <- function(xx) {
     

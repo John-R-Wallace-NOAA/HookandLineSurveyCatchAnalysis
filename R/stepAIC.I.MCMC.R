@@ -20,6 +20,7 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
        sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/printf.R")
        sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/catf.R")
        sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/DIC.R")
+       sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/get.subs.R")
        
   
     require(gtools) 
@@ -527,30 +528,52 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
          N.years <- length(grep("year", names(FIT.DF))) + 1
          Index <- array(dim=c(nrow(EMM), N.years, N.Sites)) # nrow(EMM) = nrow(FIT.DF) = nrow(MCMC) = mcmc/thin; Usually looking for 1000 MCMC after thinning, but that is no longer hardwired here
          
-         if(Area %in% c("Orig121", "ALL")) 
-              SC <- cbind(site_number101 = rep(0, nrow(EMM)), FIT.DF[, Site.Col.Num]) # SC = Site Columns
-        
-         if(Area == "CCA") 
-             SC <- cbind(site_number501 = rep(0, nrow(EMM)), FIT.DF[, Site.Col.Num]) 
-      
-         yearLast <- 2003 + N.years # Inclusive years so for the math use one minus the start of the survey
-         Iyear <- paste0("I", 2004:yearLast)  # c("I2004", "I2005", "I2006", "I2007", ...)
-    
-         for( i in 1:N.Sites) {
-           
-            Index[,1,i] <- (inv.logit(0 + SC[,i] + EMM) + inv.logit(0 + SC[,i] + EMM + FIT.DF$vesselAggresor))/2
+         if(Area %in% c("Orig121", "ALL"))  {
          
-            for (j in 2:N.years) {
-           
-              yearCol <- paste0('year', j + 2003)
-    
-              if(j < 10)
-                Index[,j,i] <- (inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselAggresor))/2
-              else
-                Index[,j,i] <- (inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselAggresor) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselToronado))/3
-           }
+            SC <- cbind(site_number101 = rep(0, nrow(EMM)), FIT.DF[, Site.Col.Num]) # SC = Site Columns
+        
+            yearLast <- 2003 + N.years # Inclusive years so for the math use one minus the start of the survey
+            Iyear <- paste0("I", 2004:yearLast)  # c("I2004", "I2005", "I2006", "I2007", ...)
+            
+            for( i in 1:N.Sites) {
+              
+               Index[,1,i] <- (inv.logit(0 + SC[,i] + EMM) + inv.logit(0 + SC[,i] + EMM + FIT.DF$vesselAggresor))/2
+            
+               for (j in 2:N.years) {
+              
+                 yearCol <- paste0('year', j + 2003)
+            
+                 if(j < 10)
+                   Index[,j,i] <- (inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselAggresor))/2
+                 else
+                   Index[,j,i] <- (inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselAggresor) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselToronado))/3
+              }
+            }
+            
+            FINAL.GLM.COEF <- data.frame(rbind(year2004 = c(0,0), summary(GLM.FINAL.AIC)$coef[2:(yearLast - 2003), 1:2]))
          }
-    
+         
+         if(Area == "CCA")  {
+         
+            SC <- cbind(site_number501 = rep(0, nrow(EMM)), FIT.DF[, Site.Col.Num]) 
+         
+            yearLast <- 2013 + N.years # Inclusive years so for the math use one minus the start of the survey
+            Iyear <- paste0("I", 2014:yearLast)  # c("I2004", "I2005", "I2006", "I2007", ...)
+            
+            for( i in 1:N.Sites) {
+              
+               Index[,1,i] <- (inv.logit(0 + SC[,i] + EMM) + inv.logit(0 + SC[,i] + EMM + FIT.DF$vesselAggresor))/2
+            
+               for (j in 2:N.years) {
+              
+                 yearCol <- paste0('year', j + 2013)
+                 Index[,j,i] <- (inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselAggresor) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselToronado))/3
+              }
+            }
+            
+            FINAL.GLM.COEF <- data.frame(rbind(year2014 = c(0,0), summary(GLM.FINAL.AIC)$coef[2:(yearLast - 2013), 1:2]))
+         }
+         
          Index.Over.Sites <- apply(Index, 1:2, mean)
          colnames(Index.Over.Sites) <- Iyear
          FIT.DF <- cbind(FIT.DF, Index.Over.Sites)
@@ -573,7 +596,6 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
      
       Q.MCMC <- apply(FIT.DF[, Iyear], 2, quantile, probs = c(0.50, 0.025, 0.975), type = 8)
       
-      FINAL.GLM.COEF <- data.frame(rbind(year2004 = c(0,0), summary(GLM.FINAL.AIC)$coef[2:(yearLast - 2003), 1:2]))  
       names(FINAL.GLM.COEF)[[2]] <- "Std.Error"  # This is for a bug in summary.glm() function; it gives "Std. Error"
     
      

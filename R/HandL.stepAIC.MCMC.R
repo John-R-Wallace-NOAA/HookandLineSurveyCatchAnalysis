@@ -41,7 +41,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
          
         # Look at the imported data
         dev.new(width =16, height = 10)
-        plot.design.jrw(DATA[, c("year", "site_number", "vessel", "drop_number", "hook_number", "angler_number", "moon_phase_r", "sex", "CrewStaff")], DATA[, Y.Name], ylab = paste("Mean of", Y.Name))
+        plot.design.jrw(DATA[, c("year", "site_number", "vessel", "drop_number", "hook_number", "angler_number", "moon_phase_r", "CrewStaff")], DATA[, Y.Name], ylab = paste("Mean of", Y.Name))
         
         catf("\n\nThe weight by length figure with groups by sex is only for QA/QC. Length, weight, and sex are not used in this model.\n\n")
         dev.new()

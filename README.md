@@ -1,7 +1,7 @@
 # Hook_and_Line_Survey_Catch_Analysis
 Binary catch data analyzed at the hook level using a modified stepAIC() function from the MASS R package with a sample from the posterior distribution generated using MCMClogit() in the MCMCpack R package.  
 
-The modified stepAIC() adds a buffer to the AIC testing of the models being looped over. The new candidate model has to be better (smaller) than (AIC - buffer) of the current model for the break of the loop not to occur. So if the buffer = 1.95 (the default), then the new candidate model has to be almost 2 AIC units better for the AIC stepping to continue. If the buffer is significantly greater than 2 AIC units then the new model has to be a lot better than the current model for the AIC stepping to continue. Hook and Line Survey binary GLM models appear to need a value far greater than 2 AIC units to have parsimony and not have too many variables and biologically dubious interactions terms - this need is not fully understood but in practice works quite well once the buffer is tuned.  The buffer is a vector, with the first element being for main effects and the second element for interaction terms.
+The modified stepAIC() adds a buffer to the AIC testing of the models being looped over. The new candidate model has to be better (smaller) than (AIC - buffer) of the current model for the break of the loop not to occur. So if the buffer = 1.95 (the default), then the new candidate model has to be almost 2 AIC units better for the AIC stepping to continue. If the buffer is significantly greater than 2 AIC units then the new model has to be a lot better than the current model for the AIC stepping to continue. Hook and Line Survey binary GLM models appear to need a value far greater than 2 AIC units to have parsimony with not too many variables and biologically dubious interactions terms. This need is not fully understood, but the hook level data does make the total N in the models relatively high and a large number of explanatory variables are considered. In practice the buffer works quite well once it is tuned. The buffer is a vector, with the first element being for main effects and the second element for interaction terms.
 
 Note that the early years of the survey had less non-CCA (Cowcod Conservation Area) sites then the standard 121 unique sites used in the non-CCA part of the survey:
 
@@ -26,7 +26,7 @@ Note that the early years of the survey had less non-CCA (Cowcod Conservation Ar
      
 For species that are caught less frequently and predominately only on certain sites, these missing sites may impact the index in the early years.
 
-Years with less sites than 121 in the later part of the survey due to weather issues and those with greater than 121 are duplicated sites.
+Years with less sites than 121 after 2008 are due to weather issues. A 122'nd site was added starting in 2016 but is not productive and may be removed in the future.
 
 ## Reference
 

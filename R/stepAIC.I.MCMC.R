@@ -2,9 +2,9 @@
 # NFT = No Fishing Time
 # vessel is taken out of the model since it is colinear with CrewStaff, but then recreated later
 
-stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, Interaction = TRUE, Include.FishTime = FALSE, reducedFormula = FALSE, buffer = NULL, contrast = 'treatment', 
-         DIC.Check = 3, tune = 0.17, mcmc = 500000, burnin = 3000, thin = 500, verbose = 1000, Stop.before.MCMC = FALSE, MAIN.STEP.AIC = NULL, STEP.AIC = NULL, 
-         GLM.FINAL.AIC = NULL) {
+stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "CCA", "ALL")[1], VermComplex = FALSE, Interaction = TRUE, Include.FishTime = FALSE, 
+         reducedFormula = FALSE, buffer = NULL, contrast = 'treatment', DIC.Check = 3, tune = 0.17, mcmc = 500000, burnin = 3000, thin = 500, verbose = 1000, 
+         Stop.before.MCMC = FALSE, MAIN.STEP.AIC = NULL, STEP.AIC = NULL, GLM.FINAL.AIC = NULL) {
   
   
     #   -------- Import utility Functions --------
@@ -507,13 +507,13 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, 
       ##########################################################
       
       FIT.DF$vesselAggresor <- apply(FIT.DF[, paste("CrewStaff", apply(matrix(sort(as.character(unique(DATA$CrewStaff[DATA$vessel %in% "Aggressor"]))), ncol = 1), 1, 
-                                             function(x) { paste(get.subs(x, sep = " "), collapse = "") }), sep="")[-1]], 1, mean) # The veseel with crewstaff set to zero needs the '[-1]' here
+                                             function(x) { paste(get.subs(x, sep = " "), collapse = "") }), sep = "")[-1]], 1, mean) # The veseel with crewstaff set to zero needs the '[-1]' here
     
       FIT.DF$vesselMirage <- apply(FIT.DF[, paste("CrewStaff", apply(matrix(sort(as.character(unique(DATA$CrewStaff[DATA$vessel %in% "Mirage"]))), ncol = 1), 1, 
-                                             function(x) { paste(get.subs(x, sep = " "), collapse = "") }), sep="")], 1, mean)
+                                             function(x) { paste(get.subs(x, sep = " "), collapse = "") }), sep = "")], 1, mean)
     
       FIT.DF$vesselToronado <- apply(FIT.DF[, paste("CrewStaff", apply(matrix(sort(as.character(unique(DATA$CrewStaff[DATA$vessel %in% "Toronado"]))), ncol = 1), 1, 
-                                             function(x) { paste(get.subs(x, sep = " "), collapse = "") }), sep="")], 1, mean)
+                                             function(x) { paste(get.subs(x, sep = " "), collapse = "") }), sep = "")], 1, mean)
     
       FIT.DF$vesselAggresor <- FIT.DF$vesselAggresor - FIT.DF$vesselMirage
       FIT.DF$vesselToronado <- FIT.DF$vesselToronado - FIT.DF$vesselMirage 
@@ -526,7 +526,13 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, 
          N.Sites <- length(Site.Col.Num) + 1 # Including first site that is set to zero in the model
          N.years <- length(grep("year", names(FIT.DF))) + 1
          Index <- array(dim=c(nrow(EMM), N.years, N.Sites)) # nrow(EMM) = nrow(FIT.DF) = nrow(MCMC) = mcmc/thin; Usually looking for 1000 MCMC after thinning, but that is no longer hardwired here
-         SC <- cbind(site_number101 = rep(0, nrow(EMM)), FIT.DF[,Site.Col.Num]) # SC = Site Columns
+         
+         if(Area %in% c("Orig121", "ALL")) 
+              SC <- cbind(site_number101 = rep(0, nrow(EMM)), FIT.DF[, Site.Col.Num]) # SC = Site Columns
+        
+         if(Area == "CCA") 
+             SC <- cbind(site_number501 = rep(0, nrow(EMM)), FIT.DF[, Site.Col.Num]) 
+      
          yearLast <- 2003 + N.years # Inclusive years so for the math use one minus the start of the survey
          Iyear <- paste0("I", 2004:yearLast)  # c("I2004", "I2005", "I2006", "I2007", ...)
     
@@ -551,7 +557,7 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, VermComplex = FALSE, 
     
       } else {
       
-        stop("Only treatment contrasts are currentlty supported") # *******************************************************
+        stop("Only treatment contrasts are currently supported") # *******************************************************
       }
     
       assign(paste(substring(Y.Name,4), ".FIT.DF.MCMC.", round(mcmc/1e6,1), "M", ".Burn.", round(burnin/1e6,1), "M", sep=""), FIT.DF, pos = 1)

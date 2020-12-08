@@ -61,7 +61,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     
     # Print results table
     catf("\n\n"); print(stepAICList$SS.Table); catf("\n")
-    capture.output(print(stepAICList$SS.Table), file = paste0(Y.Name, ".SS.Table.txt"))
+    capture.output(print(stepAICList$SS.Table), file = paste0(substring(Y.Name, 4), ".SS.Table.txt"))
     
     
     # Print the final figure
@@ -99,7 +99,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     
     
     #     Output to PNG
-    png(width = 1024, height = 1024, file = paste0(Y.Name, ".MCMC.Index.and.Year.Effect.Coeff.png"))
+    png(width = 1024, height = 1024, file = paste0(substring(Y.Name, 4), ".MCMC.Index.and.Year.Effect.Coeff.png"))
        
     yRange <- c(min(c(stepAICList$Q.MCMC[2,], 0)), max(stepAICList$Q.MCMC[3,]))
     yRange <- c(yRange[1] - 0.05 * diff(yRange), yRange[2] + 0.05 * diff(yRange))

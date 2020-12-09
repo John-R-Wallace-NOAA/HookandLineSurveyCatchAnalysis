@@ -11,6 +11,7 @@
 
 remotes::install_github("John-R-Wallace-NOAA/HookandLineSurveyCatchAnalysis")  # Install as needed
 
+# Required packages listed here for help with installation (other packages may be installed by these packages).
 require(lattice)
 require(maptools)
 require(gtools) 

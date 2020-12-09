@@ -499,9 +499,8 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
       EMM <- FIT.DF[,1] + as.matrix(FIT.DF[,-1]) %*% matrix(apply(GLM.FINAL.AIC$data[,-ncol(GLM.FINAL.AIC$data)], 2, median), ncol=1) # Added Y column (last column of the matrix) needs to taken away here.
     
       ##########################################################
-      # Aggressor crew staff set to zero in 2016 
-      # Changed Adrian Chavez's name to 'AAAdrian Chavez'. so the Aggressor also has the crew name that gets set to zero
-      # *** If no CrewStaff since model had better AIC without CrewStaff see: W:\ALL_USR\JRW\Hook & Line Survey\2018 ***
+      # Aggressor is now always the vessel whose crew staff is set to 
+      # zero since Phillip Ebert's name is changed to 'AAAPhillipEbert'.
       ##########################################################
       
       FIT.DF$vesselAggresor <- apply(FIT.DF[, paste("CrewStaff", apply(matrix(sort(as.character(unique(DATA$CrewStaff[DATA$vessel %in% "Aggressor"]))), ncol = 1), 1, 

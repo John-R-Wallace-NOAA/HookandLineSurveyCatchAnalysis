@@ -20,7 +20,6 @@ require(HookandLineSurveyCatchAnalysis)
    
    
 # ---- Copper, Area = 121 (standard buffer = c(15, 45)); default value of 0.009 for propHookCutOffToro  ----
-# setwd("W:/ALL_USR/JRW/Hook & Line Survey/2020/Models/Copp.2019.NFT.1k.121.b15.45")
 dir.create('Copp.2019.NFT.1k.121', showWarnings = FALSE)
 setwd('Copp.2019.NFT.1k.121'); getwd()
 # Running 1k to find the correct proportion of total hooks cut off for each of the 3 vessels. 
@@ -31,8 +30,8 @@ Copp.2019.NFT.1k.121 <- HandL.stepAIC.MCMC(Y.Name = "NumCopp", common_name = "Co
 Copp.2019.NFT.1k.121$Final.Model
 
   
-dir.create('Copp.2019.NFT.1k.121', showWarnings = FALSE)
-setwd('Copp.2019.NFT.1k.121'); getwd()                        
+dir.create('Copp.2019.NFT.1m.121', showWarnings = FALSE)
+setwd('Copp.2019.NFT.1m.121'); getwd()                        
 Copp.2019.NFT.1m.121 <- HandL.stepAIC.MCMC(Y.Name = "NumCopp", common_name = "Copper Rockfish", Area = c('Orig121', 'CCA', 'ALL')[1], Include.FishTime = FALSE, 
                              reducedFormula = TRUE, buffer = c(15, 45), tune = 0.14, mcmc = 1e6, burnin = 1000, thin = 1000, verbose = 1000, 
                              grandPathCSV = "../qryGrandUnifiedThru2019_For2021Assessments_DWarehouse version.csv")

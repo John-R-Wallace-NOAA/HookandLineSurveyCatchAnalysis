@@ -20,7 +20,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
      require(lattice)
      require(Hmisc)
      
-     if(is.null(GLM.FINAL.AIC)) {
+     if(is.null(GLM.FINAL.AIC) & is.null(STEP.AIC) & is.null(MAIN.STEP.AIC)) {
      
         # Import the data
         Grand <- importData(grandPathCSV = grandPathCSV)

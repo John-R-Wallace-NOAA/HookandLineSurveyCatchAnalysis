@@ -46,11 +46,12 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
         catf("\n\nThe weight by length figure with groups by sex is only for QA/QC. Length, weight, and sex are not used in this model.\n\n")
         dev.new()
         print(xyplot(weight_kg ~ length_cm | year, groups = ordered(sex, c('M', 'F', 'U')), cex = c(1, 0.4, 1), data = DATA, xlab = "Length (cm)", ylab = "Weight (kg)", auto = TRUE)) 
-     }
-    
-     DATA <- DATA[, - grep('weight_kg', names(DATA))]
-     DATA <- DATA[, - grep('length_cm', names(DATA))] 
-     DATA <- na.omit(DATA)
+   
+        DATA <- DATA[, - grep('weight_kg', names(DATA))]
+        DATA <- DATA[, - grep('length_cm', names(DATA))] 
+        DATA <- na.omit(DATA)
+     }   
+       
     
      # Use MCMClogit from MCMCpack package
      stepAICList <- stepAIC.I.MCMC(Y.Name = Y.Name, DATA = DATA, Area = Area, VermComplex = VermComplex, Interaction = Interaction, Include.FishTime = Include.FishTime, 

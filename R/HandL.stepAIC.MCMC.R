@@ -27,7 +27,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
  
         # Process the data and create minor angler groups
         DATA <- processData(Y.Name = Y.Name, common_name = common_name, Grand = Grand, Include.FishTime = Include.FishTime, Restrict.6min = Restrict.6min, Area = Area, 
-                             reducedFormula = reducedFormula, propHookCutOffAggr = propHookCutOffAggr, propHookCutOffMirage = propHookCutOffAggr, propHookCutOffToro = propHookCutOffToro)
+                             reducedFormula = reducedFormula, propHookCutOffAggr = propHookCutOffAggr, propHookCutOffMirage = propHookCutOffMirage, propHookCutOffToro = propHookCutOffToro)
         
         switch(menu("Enter 1 (one) if anglers with a small number of hooks fished need to be added to the minor anglers, or if the minor anglers group is too small compared with the other anglers? (Enter 0 (zero) to skip.)") + 1, cat("\n"), {
             catf("\nChange the proportion of hooks fished cutoff value argument for the correct vessel and rerun HandL.MCMClogit()\n")

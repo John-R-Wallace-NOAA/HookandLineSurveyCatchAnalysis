@@ -117,7 +117,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     
     dev.off()
     
-    stepAICList 
+   invisible(stepAICList)
 
 }
 

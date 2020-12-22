@@ -62,8 +62,8 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
     
     # Print results table
     catf("\n\n"); print(stepAICList$SS.Table); catf("\n")
-    capture.output(print(stepAICList$SS.Table), file = paste0(substring(Y.Name, 4), ".SS.Table.txt"))
-    
+    capture.output(print(stepAICList$SS.Table[1:2, ]), file = paste0(substring(Y.Name, 4), ".SS.Table.txt"))
+    capture.output(print(stepAICList$SS.Table[3:4, ]), file = paste0(substring(Y.Name, 4), ".Year.Effect.Coef.Table.txt"))
     
     # Print the final figure
     #      To redo the figure below for a new placement of '(a)' of '(b)' use stepAICList <- < the list this function was saved to >, e.g. stepAICList <- SqSpot.2019.NFT.1k.ALL, 

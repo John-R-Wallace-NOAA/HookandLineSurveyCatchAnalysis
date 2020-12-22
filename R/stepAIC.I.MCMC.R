@@ -490,8 +490,8 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
       DIC.V <- DIC(MCMC, GLM.FINAL.AIC)
       
       AIC.DIC <- data.frame(AIC = AIC.V, DIC = DIC.V)
-      save(AIC.DIC, file="AIC.DIC.0.RData")
-    
+     
+     
       # ---- Index Results --------
     	
       FIT.DF <- as.data.frame(MCMC)
@@ -598,10 +598,13 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
       SS.Table <- round(rbind(Median = apply(FIT.DF[, Iyear], 2, median), SD.log = apply(FIT.DF[, Iyear], 2, 
               function(x) sd(log(x))), t(FINAL.GLM.COEF)), 4)
       
-      FinalName <- paste0(substring(Y.Name,4), ".Final.Model.MCMC.", yearLast) # 
+      FinalName <- paste0(substring(Y.Name, 4), ".Final.Model.MCMC.", yearLast) 
     
-      assign(FinalName, list(Final.Model = GLM.FINAL.AIC$formula, AIC.DIC = data.frame(AIC = AIC.V, DIC = DIC.V), 
-              Final.glm.coef = FINAL.GLM.COEF, Q.MCMC = Q.MCMC, SS.Table = SS.Table), pos = 1)
+      Final.Formula.empty.env <- GLM.FINAL.AIC$formula
+      environment(Final.Formula.empty.env) <- emptyenv()
+      
+      Out <- list(Final.Model = Final.Formula.empty.env, AIC.DIC = AIC.DIC, Final.glm.coef = FINAL.GLM.COEF, Q.MCMC = Q.MCMC, SS.Table = SS.Table, MCMC = MCMC, DATA = DATA)
+      assign(FinalName, Out, pos = 1)
     
       save(list = FinalName, file = paste(FinalName, ".RData", sep=""))  
     
@@ -615,6 +618,9 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
     # ------------------ DIC Check --------------------------------------
     
     if(FALSE) {
+    
+      save(AIC.DIC, file = "AIC.DIC.0.RData")
+    
       for( i in 1:DIC.Check ) {
         
         catf("\n\nStarting DIC check: ", i, as.character(Sys.time()), "\n\n")
@@ -636,9 +642,8 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
        
         AIC.DIC = data.frame(AIC=AIC.V, DIC=DIC.V)
         save(AIC.DIC, file=paste("AIC.DIC.", i, ".RData", sep=""))
-    
       }
-    }
+   }
     
     #  Return final results
     
@@ -646,17 +651,6 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
     # In 2016 FIT.DF = FIT.DF for Bocaccio and MCMC = MCMC for Lingcod
     # list(Final.Model = GLM.FINAL.AIC$formula, AIC.DIC = AIC.DIC, Final.glm.coef = FINAL.GLM.COEF, Q.MCMC = Q.MCMC, SS.Table = SS.Table, FIT.DF = FIT.DF)
     
-    list(Final.Model = GLM.FINAL.AIC$formula, AIC.DIC = AIC.DIC, Final.glm.coef = FINAL.GLM.COEF, Q.MCMC = Q.MCMC, SS.Table = SS.Table, MCMC = MCMC)
-    
-    
-     
-
+    invisible(Out)
 }
-
-
-
-
-
-
-
 

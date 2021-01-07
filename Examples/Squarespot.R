@@ -1,5 +1,9 @@
 
-# ------ Squarespot, Area = 121 (standard buffer = c(15, 45)); propHookCutOffToro = 0.015 ------
+
+# ---------------------------------------------------------------------------------------------
+# ------ Squarespot, Area = 121 (standard buffer = c(15, 45)); propHookCutOffToro = 0.015 -----
+# ---------------------------------------------------------------------------------------------
+
 
 # -- For Tantalus --
 # /opt/R/64-bit/R-4.0.1_MKL/bin/R
@@ -9,9 +13,9 @@
 # RhpcBLASctl::blas_set_num_threads(6)
 # RhpcBLASctl::blas_get_num_procs() 
 
-remotes::install_github("John-R-Wallace-NOAA/HookandLineSurveyCatchAnalysis")  # Install as needed
+remotes::install_github("John-R-Wallace-NOAA/HookandLineSurveyCatchAnalysis") # One time only, per R version, per machine
 
-# Required packages listed here for help with installation (other packages may be installed by these packages).
+
 require(lattice)
 require(maptools)
 require(gtools) 
@@ -115,33 +119,47 @@ SqSpot.2019.NFT.1m.121$Final.Model
 #     "a lower limit for the number of units covered by the limits on the ‘y’ for each plot. The default is scale=0, in which case each plot uses the range of the functions 
 #     being plotted to create their ylim. By setting scale to be the maximum value of diff(ylim) for all the plots, then all subsequent plots will produced in the same 
 #     vertical units. This is essential for comparing the importance of fitted terms in additive models."
-#     The 'P1' and  'P2' are the polynomial levels for the continuous variable.  The maximum 'P' level is the level to give in the poly() function in the shorthand formula below.
+#     The 'P1', 'P2' are the polynomial levels for the continuous variable.  The maximum 'P' level is the level to give in the poly() function in the shorthand formula below.
 #     'DATA' is saved to .GlobalEnv by the run above.
 
-dev.new()
-par(mfrow = c(3, 2))
-plot.Gam(glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(swell_height_m, 2), data = DATA), se = TRUE, rugplot = TRUE, scale = 0)
 
-
-# Select the scale at 0.08, the max diff(ylim), and replot
+GLM <- glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(swell_height_m, 2), data = SqSpot.Final.Model.MCMC.2019$DATA, family = 'binomial')
 
 dev.new()
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(swell_height_m, 2), data = DATA), se = TRUE, rugplot = TRUE, scale = 0.08)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 0)
+
+
+# Select the scale at 7.6, the max diff(ylim), and replot
+
+dev.new()
+par(mfrow = c(3, 2))
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
 
 # Save this figure to 'SqSplot.121.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
  
+# ANOVA-like table   
+(ANOVA <- anova(GLM, test = 'Chisq'))
+
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
+ 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(SqSplot.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
  
 
+# ---------------------------------------------------------------------------------------------
 # ------ Squarespot, Area = ALL; standard buffer = c(15, 45); propHookCutOffToro = 0.015 ------
+# ---------------------------------------------------------------------------------------------
+
 
 # -- For Tantalus --
 # /opt/R/64-bit/R-4.0.1_MKL/bin/R
 # options(width = 160)
   
-# For R-MKL multithreading 
+# For R-MKL multithreading  (see https://github.com/John-R-Wallace-NOAA/R_4.X_MRO_Windows_and_R_MKL_Linux)
 # RhpcBLASctl::blas_set_num_threads(6)
 # RhpcBLASctl::blas_get_num_procs() 
+
 
 require(lattice)
 require(maptools)
@@ -255,32 +273,48 @@ SqSpot.2019.NFT.1m.ALL$Final.Model
 #     "a lower limit for the number of units covered by the limits on the ‘y’ for each plot. The default is scale=0, in which case each plot uses the range of the functions 
 #     being plotted to create their ylim. By setting scale to be the maximum value of diff(ylim) for all the plots, then all subsequent plots will produced in the same 
 #     vertical units. This is essential for comparing the importance of fitted terms in additive models."
-#     The 'P1', 'P2', and 'P3' are the polynomial levels for the continuous variable.  The maximum 'P' level is the level to give in the poly() function in the shorthand formula below.
+#     The 'P1', 'P2' are the polynomial levels for the continuous variable.  The maximum 'P' level is the level to give in the poly() function in the shorthand formula below.
 #     'DATA' is saved to .GlobalEnv by the run above.
 
-dev.new()
-par(mfrow = c(3, 2))
-plot.Gam(glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(moon_percent_fullness_r, 3), data = DATA), se = TRUE, rugplot = TRUE, scale = 0)
 
-
-# There are some sites with high partials making the max diff(ylim) scale = 0.2. This is quite a bit larger than for the standard 121 sites.
+ 
+GLM <- glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(moon_percent_fullness_r, 3), data = SqSpot.Final.Model.MCMC.2019$DATA, family = 'binomial')
 
 dev.new()
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(moon_percent_fullness_r, 3), data = DATA), se = TRUE, rugplot = TRUE, scale = 0.2)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 0)
+
+
+# Select the scale at 7.6, the max diff(ylim), and replot
+dev.new()
+par(mfrow = c(3, 2))
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
 
 # Save this figure to 'SqSplot.ALL.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
  
+# ANOVA-like table   
+(ANOVA <- anova(GLM, test = 'Chisq'))
 
-# ------ Squarespot, Area = 'CCA' -----
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
+ 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(SqSpot.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
+ 
+ 
+
+# ---------------------------------------------------------------------------------------------                           
+# ------ Squarespot, Area = CCA -----
+# ---------------------------------------------------------------------------------------------
+
+
 # Note here tune = 0.17. From MCMClogit()'s help for 'tune' arg: Make sure that the acceptance rate is satisfactory (typically between 0.20 and 0.5) before using the posterior sample for inference.
-# The default for tune is 0.17, but for the non-CCA '121 sites' and the all sites models for Squarespot, tune = 0.14. 
+# The default for tune is 0.17, but for '121' and 'ALL' areas for Squarespot, tune = 0.14. 
 
 # -- For Tantalus --
 # /opt/R/64-bit/R-4.0.1_MKL/bin/R
 # options(width = 160)
   
-# For R-MKL multithreading   
+# For R-MKL multithreading (see https://github.com/John-R-Wallace-NOAA/R_4.X_MRO_Windows_and_R_MKL_Linux) 
 # RhpcBLASctl::blas_set_num_threads(6)
 # RhpcBLASctl::blas_get_num_procs() 
 
@@ -378,43 +412,35 @@ SqSpot.2019.NFT.1m.CCA$Final.Model
 #     "a lower limit for the number of units covered by the limits on the ‘y’ for each plot. The default is scale=0, in which case each plot uses the range of the functions 
 #     being plotted to create their ylim. By setting scale to be the maximum value of diff(ylim) for all the plots, then all subsequent plots will produced in the same 
 #     vertical units. This is essential for comparing the importance of fitted terms in additive models."
-#     The 'P1', 'P2', and 'P3' are the polynomial levels for the continuous variable.  The maximum 'P' level is the level to give in the poly() function in the shorthand formula below.
 #     ('DATA' is saved to .GlobalEnv by the run above.)
 
-par(mfrow = c(3, 2))
-plot.Gam(glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(moon_percent_fullness_r, 3), data = DATA), se = TRUE, rugplot = TRUE, scale = 0)
 
-# Ignoring (for this figure) the extreme variability of MinorAnglerAggressor in CrewStaff, select the scale at 0.2, the max diff(ylim) seen in site_number.
-# The crew staff and vessel captains are allowed to fish on rare occasions for morale purposes, but the sites can be better than average.
-# Looking back at the design plot (the one with "Mean of NumSqSpot" vs factors in the model) we see that MinorAnglerAggressor does very well. 
-# For more info on design plots see the help for graphics::plot.design(). This design plot created with JRWToolBox::plot.design.jrw() which has improved labeling.
-# Adding other minor anglers to CrewStaffMinorAnglerAggressor could be considered.
+GLM <- glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(moon_percent_fullness_r, 3), data = SqSpot.Final.Model.MCMC.2019$DATA, family = 'binomial')
 
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(moon_percent_fullness_r, 3), data = DATA), se = TRUE, rugplot = TRUE, scale = 0.2)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 0)
 
-# For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
+# Select the scale at 7.6, the max diff(ylim), and replot
+par(mfrow = c(3, 2))
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
 
-# png("SqSpot.GAM.Fig.png", width = 1000, height = 1000)
-# par(mfrow = c(3, 2))
-# plot.Gam(glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(moon_percent_fullness_r, 3), data = DATA), se = TRUE, rugplot = TRUE, scale = 0.2)
-# dev.off()  
+# Save this figure to 'SqSplot.CCA.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
+
+
+# ANOVA-like table   
+(ANOVA <- anova(GLM, test = 'Chisq'))
+
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
  
-
-# Recreate the design plot by first downloading plot.design.jrw() with sourceFunctionURL()
-sourceFunctionURL <- function(URL) {
-        ' # For more functionality, see gitAFile() in the rgit package ( https://github.com/John-R-Wallace-NOAA/rgit ) which includes gitPush() and git() '
-        require(RCurl)
-        File.ASCII <- tempfile()
-        on.exit(file.remove(File.ASCII))
-        writeLines(paste(readLines(textConnection(RCurl::getURL(URL))), collapse = "\n"), File.ASCII)
-        source(File.ASCII, local = parent.env(environment()))
-}
-     
-sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/plot.design.jrw.R")
-
-# Also save manually to 'SqSpot.Design.Plot.of.Raw.Data.Means.png" 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(SqSpot.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
+ 
+ 
+ 
+# Looking at the design plot (the one with "Mean of NumSqSpot" vs factors in the model) we see that MinorAnglerAggressor does very well.
 dev.new()
 plot.design.jrw(DATA[, c("year", "site_number", "vessel", "drop_number", "hook_number", "angler_number", "moon_phase_r", "CrewStaff")], DATA[, 'NumSqSpot'], ylab = paste("Mean of NumSqSpot"))
  
-
+ 
+ 
+ 

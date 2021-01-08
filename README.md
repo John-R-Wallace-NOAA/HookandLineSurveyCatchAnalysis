@@ -33,4 +33,4 @@ Years with less sites than 121 after 2008 are due to weather issues. A 122'nd si
 **Analysis of fishery-independent hook and line-based data for use in the stock assessment of bocaccio rockfish (Sebastes paucispinis)**
 
 
-     https://www.sciencedirect.com/science/article/pii/S0165783610002031)
+     https://www.sciencedirect.com/science/article/pii/S0165783610002031

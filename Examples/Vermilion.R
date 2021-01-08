@@ -18,8 +18,10 @@ require(RCurl)
 require(HookandLineSurveyCatchAnalysis) 
     
    
-   
+# -------------------------------------------------------------------------------------------------------------   
 # ---- Vermilion, Area = 121 (standard buffer = c(15, 45)); default value of 0.009 for propHookCutOffToro  ----
+# ------------------------------------------------------------------------------------------------------------- 
+
 dir.create('Verm.2019.NFT.1k.121', showWarnings = FALSE)
 setwd('Verm.2019.NFT.1k.121'); getwd()
 # Running 1k to find the correct proportion of total hooks cut off for each of the 3 vessels. 
@@ -139,14 +141,19 @@ plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 10.4)
 
 # Save this figure to 'Verm.121.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
 
-
 # ANOVA-like table   
 (ANOVA <- anova(GLM, test = 'Chisq'))
-capture.output(ANOVA, file = paste0(substring(as.character(Verm.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.Table.txt"))
+
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
+ 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(Verm.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
+ 
 
                              
-
-# ===== Vermilion, Area = All; propHookCutOffToro = 0.015 =====
+# ------------------------------------------------------------------------------------------------------------- 
+# ----- Vermilion, Area = All; propHookCutOffToro = 0.015 -----
+# ------------------------------------------------------------------------------------------------------------- 
 
 # Jump straight to the 1m MCMC 
 dir.create('Verm.2019.NFT.1m.ALL', showWarnings = FALSE)
@@ -281,17 +288,22 @@ plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 11)
 # #   No terms saved for "a:b" style interaction terms
 
 
-
 # Save this figure to 'Verm.ALL.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
-  
+ 
 
 # ANOVA-like table   
 (ANOVA <- anova(GLM, test = 'Chisq'))
-capture.output(ANOVA, file = paste0(substring(as.character(Verm.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.Table.txt"))
+
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
+ 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(Verm.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
+ 
 
 
-
-# ===== Vermilion, Area = CCA; propHookCutOffAggr = 0.040, propHookCutOffMirage = 0.010, propHookCutOffToro = 0.010 =====
+# -----------------------------------------------------------------------------------------------------------------------
+# ===== Vermilion, Area = CCA; propHookCutOffAggr = 0.040, propHookCutOffMirage = 0.010, propHookCutOffToro = 0.010 -----
+# -----------------------------------------------------------------------------------------------------------------------
 
 # Jump straight to the 1m MCMC  
 dir.create('Verm.2019.NFT.1m.CCA', showWarnings = FALSE)
@@ -365,17 +377,22 @@ dev.new()
 par(mfrow = c(3, 3))             
 plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 0)
 
-# Select the scale at 8, the max diff(ylim), and replot
+# Select the scale at 7.6, the max diff(ylim), and replot
 dev.new()
 par(mfrow = c(3, 3))
-plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 8)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
 
 # Save this figure to 'Verm.CCA.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
-  
+ 
 
 # ANOVA-like table   
 (ANOVA <- anova(GLM, test = 'Chisq'))
-capture.output(ANOVA, file = paste0(substring(as.character(Verm.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.Table.txt"))
+
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
+ 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(Verm.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
+ 
 
 
 

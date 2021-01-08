@@ -18,8 +18,11 @@ require(RCurl)
 require(HookandLineSurveyCatchAnalysis) 
     
    
-   
+# ----------------------------------------------------------------------------------------------------------   
 # ---- Copper, Area = 121 (standard buffer = c(15, 45)); default value of 0.009 for propHookCutOffToro  ----
+# ----------------------------------------------------------------------------------------------------------   
+
+# setwd("W:/ALL_USR/JRW/Hook & Line Survey/2020/Models/Copp.2019.NFT.1k.121.b15.45")
 dir.create('Copp.2019.NFT.1k.121', showWarnings = FALSE)
 setwd('Copp.2019.NFT.1k.121'); getwd()
 # Running 1k to find the correct proportion of total hooks cut off for each of the 3 vessels. 
@@ -30,8 +33,8 @@ Copp.2019.NFT.1k.121 <- HandL.stepAIC.MCMC(Y.Name = "NumCopp", common_name = "Co
 Copp.2019.NFT.1k.121$Final.Model
 
   
-dir.create('Copp.2019.NFT.1m.121', showWarnings = FALSE)
-setwd('Copp.2019.NFT.1m.121'); getwd()                        
+dir.create('Copp.2019.NFT.1k.121', showWarnings = FALSE)
+setwd('Copp.2019.NFT.1k.121'); getwd()                        
 Copp.2019.NFT.1m.121 <- HandL.stepAIC.MCMC(Y.Name = "NumCopp", common_name = "Copper Rockfish", Area = c('Orig121', 'CCA', 'ALL')[1], Include.FishTime = FALSE, 
                              reducedFormula = TRUE, buffer = c(15, 45), tune = 0.14, mcmc = 1e6, burnin = 1000, thin = 1000, verbose = 1000, 
                              grandPathCSV = "../qryGrandUnifiedThru2019_For2021Assessments_DWarehouse version.csv")
@@ -91,19 +94,33 @@ NumCopp ~ year2005 + year2006 + year2007 + year2008 + year2009 +
     drop_number3 + drop_number4 + drop_number5 + hook_number2 + 
     hook_number3 + hook_number4 + hook_number5_Top + swell_height_m
                              
-                              
+
+GLM <- glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number + swell_height_m, data = Copp.Final.Model.MCMC.2019$DATA, family = 'binomial')
+     
 dev.new()   
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number + swell_height_m, data = DATA), se = TRUE, rugplot = TRUE, scale = 0)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 0)
 
+# Select the scale at 7.6, the max diff(ylim), and replot
 dev.new()
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number + swell_height_m, data = DATA), se = TRUE, rugplot = TRUE, scale = 0.13)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
+
+# Save this figure to 'Copp.121.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
 
 
+# ANOVA-like table   
+(ANOVA <- anova(GLM, test = 'Chisq'))
+
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
+ 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(Copp.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
+ 
                              
-
+# ----------------------------------------------------------------------------------------------------------   
 # ---- Copper, Area = All; propHookCutOffToro = 0.015 ----
+# ----------------------------------------------------------------------------------------------------------   
 
 dir.create('Copp.2019.NFT.1k.ALL', showWarnings = FALSE)
 setwd('Copp.2019.NFT.1k.ALL'); getwd()
@@ -188,20 +205,36 @@ NumCopp ~ year2005 + year2006 + year2007 + year2008 + year2009 +
     drop_number5 + hook_number2 + hook_number3 + hook_number4 + 
     hook_number5_Top + swell_height_m
  
+GLM <- glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number + swell_height_m, data = Copp.Final.Model.MCMC.2019$DATA, family = 'binomial') 
  
 dev.new()   
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number + swell_height_m, data = DATA), se = TRUE, rugplot = TRUE, scale = 0)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE)
+
+# Select the scale at 7.6, the max diff(ylim), and replot
 
 dev.new()
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number + swell_height_m, data = DATA), se = TRUE, rugplot = TRUE, scale = 0.14)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
 
+ 
+# Save this figure to 'Copp.ALL.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
+
+
+# ANOVA-like table   
+(ANOVA <- anova(GLM, test = 'Chisq'))
+
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
+ 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(Copp.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
   
                              
   
-
+# ------------------------------------------------------------------------------------------------------------------
 # ---- Copper, Area = CCA; propHookCutOffAggr = 0.040, propHookCutOffMirage = 0.010, propHookCutOffToro = 0.010 ----
+# ------------------------------------------------------------------------------------------------------------------
+
 dir.create('Copp.2019.NFT.1k.CCA', showWarnings = FALSE)
 setwd('Copp.2019.NFT.1k.CCA'); getwd()
 Copp.2019.NFT.1k.CCA <- HandL.stepAIC.MCMC(Y.Name = "NumCopp", common_name = "Copper Rockfish", Area = c('Orig121', 'CCA', 'ALL')[2], Include.FishTime = FALSE, 
@@ -251,12 +284,30 @@ NumCopp ~ year2015 + year2016 + year2017 + year2018 + year2019 +
     drop_number2 + drop_number3 + drop_number4 + drop_number5 + 
     hook_number2 + hook_number3 + hook_number4 + hook_number5_Top
   
-    
+ 
+
+GLM <- glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number, data = Copp.Final.Model.MCMC.2019$DATA, family = 'binomial') 
+ 
+ 
 dev.new()   
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number, data = DATA), se = TRUE, rugplot = TRUE, scale = 0)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE)
 
+
+# Select the scale at 5.5, the max diff(ylim), and replot
 dev.new()
 par(mfrow = c(3, 2))
-plot.Gam(glm(NumCopp ~ year + site_number + CrewStaff + drop_number + hook_number, data = DATA), se = TRUE, rugplot = TRUE, scale = 0.07)
+plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 5.5)
 
+ 
+# Save this figure to 'Copp.CCA.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
+
+
+# ANOVA-like table   
+(ANOVA <- anova(GLM, test = 'Chisq'))
+
+# AIC table (requires CRAN package: AICcmodavg)
+(AICTAB <- JRWToolBox::icTableGlm(GLM))
+ 
+capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(as.character(Copp.Final.Model.MCMC.2019$Final.Model)[2], 4), ".Analysis.of.Deviance.and.AIC.Tables.txt"))
+  

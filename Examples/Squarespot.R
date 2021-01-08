@@ -1,5 +1,6 @@
 
 
+
 # ---------------------------------------------------------------------------------------------
 # ------ Squarespot, Area = 121 (standard buffer = c(15, 45)); propHookCutOffToro = 0.015 -----
 # ---------------------------------------------------------------------------------------------
@@ -136,7 +137,7 @@ dev.new()
 par(mfrow = c(3, 2))
 plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
 
-# Save this figure to 'SqSplot.121.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
+# Save this figure to 'SqSpot.121.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
  
 # ANOVA-like table   
 (ANOVA <- anova(GLM, test = 'Chisq'))
@@ -290,7 +291,7 @@ dev.new()
 par(mfrow = c(3, 2))
 plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
 
-# Save this figure to 'SqSplot.ALL.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
+# Save this figure to 'SqSpot.ALL.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
  
 # ANOVA-like table   
 (ANOVA <- anova(GLM, test = 'Chisq'))
@@ -417,14 +418,16 @@ SqSpot.2019.NFT.1m.CCA$Final.Model
 
 GLM <- glm(NumSqSpot ~ year + site_number + CrewStaff + drop_number + hook_number + poly(moon_percent_fullness_r, 3), data = SqSpot.Final.Model.MCMC.2019$DATA, family = 'binomial')
 
+dev.new() 
 par(mfrow = c(3, 2))
 plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 0)
 
 # Select the scale at 7.6, the max diff(ylim), and replot
+dev.new() 
 par(mfrow = c(3, 2))
 plot.Gam(GLM, se = TRUE, rugplot = TRUE, scale = 7.6)
 
-# Save this figure to 'SqSplot.CCA.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
+# Save this figure to 'SqSpot.CCA.GAM.Fig.png' manaully. For this figure, saving to PNG with a manual save from the Windows R console gives a better result than using png().
 
 
 # ANOVA-like table   
@@ -440,7 +443,6 @@ capture.output(cat("\n\n"), ANOVA, cat("\n\n"), AICTAB, file = paste0(substring(
 # Looking at the design plot (the one with "Mean of NumSqSpot" vs factors in the model) we see that MinorAnglerAggressor does very well.
 dev.new()
 plot.design.jrw(DATA[, c("year", "site_number", "vessel", "drop_number", "hook_number", "angler_number", "moon_phase_r", "CrewStaff")], DATA[, 'NumSqSpot'], ylab = paste("Mean of NumSqSpot"))
- 
  
  
  

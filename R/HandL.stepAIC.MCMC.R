@@ -5,14 +5,15 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
                              thin = 150, verbose = 1000, Stop.before.MCMC = FALSE, MAIN.STEP.AIC = NULL, STEP.AIC = NULL, GLM.FINAL.AIC = NULL, grandPathCSV = NULL) {
 
      #   -------- Import utility Functions --------
-     sourceFunctionURL <-function(URL) {
+     sourceFunctionURL <- function(URL) {
           ' # For more functionality, see gitAFile() in the rgit package ( https://github.com/John-R-Wallace-NOAA/rgit ) which includes gitPush() and git() '
           require(RCurl)
           File.ASCII <- tempfile()
           on.exit(file.remove(File.ASCII))
           writeLines(paste(readLines(jsonlite::fromJSON((URL))), collapse = "\n"), File.ASCII)
           source(File.ASCII, local = parent.env(environment()))
-    }
+     }
+
      
      sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/plot.design.jrw.R")
      sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/catf.R")
@@ -53,7 +54,7 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
      }   
        
     
-     # Use MCMClogit from MCMCpack package
+     # stepAIC.I.MCMC() uses MCMClogit() from the MCMCpack package
      stepAICList <- stepAIC.I.MCMC(Y.Name = Y.Name, DATA = DATA, Area = Area, VermComplex = VermComplex, Interaction = Interaction, Include.FishTime = Include.FishTime, 
                       reducedFormula = reducedFormula, buffer = buffer, contrast = contrast, DIC.Check = DIC.Check, tune = tune, mcmc = mcmc, burnin = burnin, 
                       thin = thin, verbose = verbose, Stop.before.MCMC = Stop.before.MCMC, MAIN.STEP.AIC = MAIN.STEP.AIC, STEP.AIC = STEP.AIC, 
@@ -120,4 +121,3 @@ HandL.stepAIC.MCMC <- function(Y.Name = "NumBoc", common_name = "Bocaccio", Area
    invisible(stepAICList)
 
 }
-

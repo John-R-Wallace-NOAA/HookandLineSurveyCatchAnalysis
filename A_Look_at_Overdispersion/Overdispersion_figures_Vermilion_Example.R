@@ -34,7 +34,7 @@ abline(0,1, col = 'dodgerblue')
 # By Year is better
 (yearList <- list( One = 2004:2009, Two = 2010:2015, Three = 2016:2019))
 
-# Saved out of R to the names: paste0("Verm, Pred vs Obs with Credible Interval ", min(yearList[[i]]), "_", max(yearList[[i]]), ".png")
+# Saved directly out of R to the names: paste0("Verm, Pred vs Obs with Credible Interval ", min(yearList[[i]]), "_", max(yearList[[i]]), ".png")
 for(i in 1:3) {
    dev.new()
    par(mfrow = c(3, 2))

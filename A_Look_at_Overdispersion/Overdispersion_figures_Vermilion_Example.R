@@ -1,4 +1,6 @@
 
+require(JRWToolBox)
+
 load("\\\\nwctantalus.nmfs.local\\jwallace\\h_jwallace\\HandL2020\\Verm.2019.NFT.1m.121\\Verm.Final.Model.MCMC.2019.RData")
 load("\\\\nwctantalus.nmfs.local\\jwallace\\h_jwallace\\HandL2020\\Verm.2019.NFT.1m.121\\Verm.MCMC.RData")
 
@@ -26,7 +28,7 @@ xyplot(Pred.MCMC.Median.CatchBySite ~ as.num(RawCatchBySite) | Year, data = Verm
 # All years and sites - too messy
 VM <- VermCatchBySite.MCMC
 dev.new(width = 14, height = 10)
-plotCI_Yaxis.jrw4(VM$RawCatchBySite, VM$Pred.MCMC.Median.CatchBySite, VM$Pred.Q.MCMC_2.5, VM$Pred.Q.MCMC_97.5, noNegCI = TRUE, noCI_gt_1 = TRUE, 
+plotCI_Yaxis.jrw4(VM$RawCatchBySite, VM$Pred.MCMC.Median.CatchBySite, VM$Pred.Q.MCMC_2.5, VM$Pred.Q.MCMC_97.5, lowerLimtCI = 0, upperLimitCI = 1, 
           col = 'red', CI.col = col.alpha('black', 0.5), ylab = 'Predicted Median Catch Rate by Site within Year using MCMC', xlab = 'Observed Catch Rate by Site within Year')
 abline(0,1, col = 'dodgerblue')
 
@@ -40,7 +42,7 @@ for(i in 1:3) {
    par(mfrow = c(3, 2))
    for (YEAR in yearList[[i]]) {
        VM <- VermCatchBySite.MCMC[VermCatchBySite.MCMC$Year %in% YEAR, ]
-       plotCI_Yaxis.jrw4(VM$RawCatchBySite, VM$Pred.MCMC.Median.CatchBySite, VM$Pred.Q.MCMC_2.5, VM$Pred.Q.MCMC_97.5, noNegCI = TRUE, noCI_gt_1 = TRUE, main = YEAR,
+       plotCI_Yaxis.jrw4(VM$RawCatchBySite, VM$Pred.MCMC.Median.CatchBySite, VM$Pred.Q.MCMC_2.5, VM$Pred.Q.MCMC_97.5, lowerLimtCI = 0, upperLimitCI = 1, main = YEAR,
                  ylim = c(-0.02, 0.85), col = 'red', CI.col = col.alpha('black', 0.5), 
                  ylab =  ifelse(YEAR %in% seq(2004, 2018, by = 2), 'MCMC Pred Prop by Site', ''), 
                  xlab = ifelse(YEAR %in% c(2008, 2009, 2014, 2015, 2018, 2019), 'Observed Catch Rate by Site within Year', ''))

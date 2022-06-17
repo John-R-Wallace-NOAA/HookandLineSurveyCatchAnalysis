@@ -8,14 +8,15 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
   
   
     #   -------- Import utility Functions --------
-       sourceFunctionURL <-function(URL) {
+       sourceFunctionURL <- function(URL) {
           ' # For more functionality, see gitAFile() in the rgit package ( https://github.com/John-R-Wallace-NOAA/rgit ) which includes gitPush() and git() '
           require(RCurl)
           File.ASCII <- tempfile()
           on.exit(file.remove(File.ASCII))
           writeLines(paste(readLines(jsonlite::fromJSON((URL))), collapse = "\n"), File.ASCII)
           source(File.ASCII, local = parent.env(environment()))
-       }
+      }
+
        
        sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/printf.R")
        sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/catf.R")
@@ -539,7 +540,7 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
               
                  yearCol <- paste0('year', j + 2003)
             
-                 if(j < 10)
+                 if(j < 10) # No Toronado in the early years
                    Index[,j,i] <- (inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselAggresor))/2
                  else
                    Index[,j,i] <- (inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselAggresor) + inv.logit(FIT.DF[[yearCol]] + SC[,i] + EMM + FIT.DF$vesselToronado))/3
@@ -592,7 +593,7 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
      
       Q.MCMC <- apply(FIT.DF[, Iyear], 2, quantile, probs = c(0.50, 0.025, 0.975), type = 8)
       
-      names(FINAL.GLM.COEF)[[2]] <- "Std.Error"  # This is for a bug in summary.glm() function; it gives "Std. Error"
+      names(FINAL.GLM.COEF)[[2]] <- "Std.Error"  #  The summary.glm() function uses "Std. Error" (with a space)
     
      
       SS.Table <- round(rbind(Median = apply(FIT.DF[, Iyear], 2, median), SD.log = apply(FIT.DF[, Iyear], 2, 
@@ -603,6 +604,11 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
       Final.Formula.empty.env <- GLM.FINAL.AIC$formula
       environment(Final.Formula.empty.env) <- emptyenv()
       
+      
+      # After 2016, change the list() output below to 'MCMC = MCMC' since I went with MCMC and dropped FIT.DF
+      # In 2016, FIT.DF = FIT.DF for Bocaccio and MCMC = MCMC for Lingcod
+      # Old: list(Final.Model = GLM.FINAL.AIC$formula, AIC.DIC = AIC.DIC, Final.glm.coef = FINAL.GLM.COEF, Q.MCMC = Q.MCMC, SS.Table = SS.Table, FIT.DF = FIT.DF)
+    
       Out <- list(Final.Model = Final.Formula.empty.env, AIC.DIC = AIC.DIC, Final.glm.coef = FINAL.GLM.COEF, Q.MCMC = Q.MCMC, SS.Table = SS.Table, MCMC = MCMC, DATA = DATA)
       assign(FinalName, Out, pos = 1)
     
@@ -645,12 +651,6 @@ stepAIC.I.MCMC <- function(Y.Name = 'NumBoc', DATA = DATA, Area = c("Orig121", "
       }
    }
     
-    #  Return final results
-    
-    # Change output after 2016 to MCMC = MCMC - I went with MCMC and dropped FIT.DF
-    # In 2016 FIT.DF = FIT.DF for Bocaccio and MCMC = MCMC for Lingcod
-    # list(Final.Model = GLM.FINAL.AIC$formula, AIC.DIC = AIC.DIC, Final.glm.coef = FINAL.GLM.COEF, Q.MCMC = Q.MCMC, SS.Table = SS.Table, FIT.DF = FIT.DF)
-    
-    invisible(Out)
+      #  Invisibly return final results
+      invisible(Out)
 }
-

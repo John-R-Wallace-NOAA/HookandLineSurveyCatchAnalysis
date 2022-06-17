@@ -1,5 +1,18 @@
 
-require(JRWToolBox)
+sourceFunctionURL <-function(URL) {
+          ' # For more functionality, see gitAFile() in the rgit package ( https://github.com/John-R-Wallace-NOAA/rgit ) which includes gitPush() and git() '
+          require(RCurl)
+          File.ASCII <- tempfile()
+          on.exit(file.remove(File.ASCII))
+          writeLines(paste(readLines(jsonlite::fromJSON((URL))), collapse = "\n"), File.ASCII)
+          source(File.ASCII, local = parent.env(environment()))
+       }
+       
+sourceFunctionURL("https://raw.githubusercontent.com/John-R-Wallace-NOAA/JRWToolBox/master/R/plotCI_Yaxis.jrw4.R")
+       
+require(gtools) 
+require(lattice)
+
 
 load("\\\\nwctantalus.nmfs.local\\jwallace\\h_jwallace\\HandL2020\\Verm.2019.NFT.1m.121\\Verm.Final.Model.MCMC.2019.RData")
 load("\\\\nwctantalus.nmfs.local\\jwallace\\h_jwallace\\HandL2020\\Verm.2019.NFT.1m.121\\Verm.MCMC.RData")
